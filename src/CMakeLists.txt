@@ -3,4 +3,10 @@ project(eOS)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(eOS main.cpp)
+SET(folder core)
+FOREACH(fold ${folder})
+    ADD_SUBDIRECTORY(${fold})
+ENDFOREACH(fold ${folder})
+
+add_executable(eOS main.cpp
+        core/def.h)
