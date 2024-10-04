@@ -3,21 +3,33 @@
 //
 
 #include "file.h"
+#include <iostream>
 
-CFile::CFile()
+CFile::CFile():
+fHandle(0)
 {
 }
 
 CFile::~CFile()
 {
+    Close();
 }
 
 const bool CFile::Open(const std::string& name, EMode mode, bool binary)
 {
-    return true;
+    if (fHandle) Close();
+    fName = name;
+
+    std::cout << "CFile::Open(" << fName << ", " <<  mode << ");" << std::endl;
+    fHandle = fopen(fName.c_str(), "r");
+    return (fHandle != nullptr);
 }
 
 void CFile::Close()
 {
+    if (fHandle == 0)
+        return;
+    fclose(fHandle);
+    fHandle = nullptr;
 }
 

@@ -5,6 +5,8 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include <string>
+
 class CFile
 {
     public:
@@ -32,6 +34,10 @@ class CFile
      *@brief Close the file.
      */
     void Close();
+
+    private:
+        FILE* fHandle;
+        std::string fName;
 };
 
 

@@ -12,3 +12,5 @@ include_directories(.)
 
 add_executable(eOS main.cpp
         core/def.h)
+
+TARGET_LINK_LIBRARIES(eOS core)
