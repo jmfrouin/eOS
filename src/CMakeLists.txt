@@ -8,5 +8,7 @@ FOREACH(fold ${folder})
     ADD_SUBDIRECTORY(${fold})
 ENDFOREACH(fold ${folder})
 
+include_directories(.)
+
 add_executable(eOS main.cpp
         core/def.h)
