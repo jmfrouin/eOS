@@ -1,0 +1,29 @@
+name: CI for eOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3.6.0
+
+    - name: Build project
+      run: |
+        git submodule update --init --recursive
+        mkdir -p build
+        cd build
+        cmake ../src
+        make
+
+    - name: Run tests
+      run: |
+        cd build
+        ./runTests

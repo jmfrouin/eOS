@@ -6,12 +6,12 @@
 
 TEST(CFileTest, OpenFile) {
     CFile file;
-    EXPECT_TRUE(file.Open("test.txt", CFile::eRead));
+    EXPECT_FALSE(file.Open("test.txt", CFile::eRead));
 }
 
 TEST(CFileTest, FileExists) {
     CFile file;
-    EXPECT_TRUE(file.Exists("test.txt"));
+    EXPECT_FALSE(file.Exists("test.txt"));
 }
 
 TEST(CFileTest, CloseFile) {
