@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <core/File.h>
+#include <Core/File.h>
 
 TEST(CFileTest, TouchFile) {
     Core::CFile File;
