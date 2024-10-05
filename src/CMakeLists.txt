@@ -14,8 +14,7 @@ include_directories(exts/googletest/googletest/include)
 
 include_directories(.)
 
-add_executable(eOS EP.cpp
-        core/def.h)
+add_executable(eOS EP.cpp)
 
 TARGET_LINK_LIBRARIES(eOS core)
 
