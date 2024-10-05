@@ -33,3 +33,14 @@ void CFile::Close()
     fHandle = nullptr;
 }
 
+bool CFile::Exists(const std::string& name)
+{
+    FILE* f = fopen(name.c_str(), "r");
+    if (f)
+    {
+        fclose(f);
+        return true;
+    }
+    return false;
+}
+

@@ -8,9 +8,17 @@ FOREACH(fold ${folder})
     ADD_SUBDIRECTORY(${fold})
 ENDFOREACH(fold ${folder})
 
+# Add Google Test
+add_subdirectory(exts/googletest)
+include_directories(exts/googletest/googletest/include)
+
 include_directories(.)
 
 add_executable(eOS main.cpp
         core/def.h)
 
 TARGET_LINK_LIBRARIES(eOS core)
+
+# Unit tests
+add_executable(runTests tests/test_file.cpp)
+target_link_libraries(runTests gtest gtest_main core)

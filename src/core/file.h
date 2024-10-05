@@ -35,6 +35,9 @@ class CFile
      */
     void Close();
 
+    bool Exists(const std::string& name);
+
+
     private:
         FILE* fHandle;
         std::string fName;
