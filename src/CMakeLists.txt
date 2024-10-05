@@ -14,11 +14,11 @@ include_directories(exts/googletest/googletest/include)
 
 include_directories(.)
 
-add_executable(eOS main.cpp
+add_executable(eOS EP.cpp
         core/def.h)
 
 TARGET_LINK_LIBRARIES(eOS core)
 
 # Unit tests
-add_executable(runTests tests/test_file.cpp)
+add_executable(runTests tests/TestFile.cpp)
 target_link_libraries(runTests gtest gtest_main core)

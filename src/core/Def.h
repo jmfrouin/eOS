@@ -8,18 +8,30 @@
 #ifndef __DEF_H__
 #define __DEF_H__
 
+
+//Bash Colors
+#define GREEN "\e[0;32m"
+#define RED "\e[0;31m"
+#define BLUE "\e[0;34m"
+#define VIOLET "\e[0;35m"
+#define CYAN "\e[0;36m"
+#define STOP "\e[0m"
+
 //Handle version
 #define MAJOR 0
 #define MINOR 0
 #define RELEASE 1
+#define BUILD 1
 #define t(u) #u
 #define VERSION(M,m,R,B) t(M) "." t(m) "." t(R) "." t(B)
 #define VERSION_STRING VERSION(MAJOR,MINOR,RELEASE,BUILD)
 
+//General app infos
+#define NAME "eOS"
+#define FULLNAME NAME " v" VERSION_STRING
 #define LOG_FILE "eOS.log"
 
-#include "build.h"
-
+#include "Errors.h"
 #include <ctime>
 #include <fstream>
 #include <iomanip>
@@ -57,22 +69,8 @@ void Log(const std::string &file, const int &line, const T &tolog, const U &tolo
     gMutex.unlock();
 }
 
-namespace eOS
+namespace Core
 {
-    enum EErrors
-    {
-        eNoError = 0,
-
-        //Generic
-        eCannotOpenFile = 1,
-        eCannotDeleteLogFile = 2,
-        eConfEmpty = 3,
-        eCannotOpenPath = 4,
-        eAccessDenied = 5,
-        eUnknown = 6,
-    };
-
-
     enum ELogsLevel
     {
         eError = 0,
