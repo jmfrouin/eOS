@@ -2,25 +2,32 @@
 #include <core/File.h>
 
 TEST(CFileTest, TouchFile) {
-    Core::CFile file;
-    EXPECT_EQ(file.Touch("test.txt"), Core::eNoError);
+    Core::CFile File;
+    EXPECT_EQ(File.Touch("test.txt"), Core::eNoError);
 }
 
 TEST(CFileTest, OpenFile) {
-    Core::CFile file;
-    EXPECT_EQ(file.Open("test.txt", Core::CFile::eRead), Core::eNoError);
+    Core::CFile File;
+    EXPECT_EQ(File.Open("test.txt", Core::CFile::eRead), Core::eNoError);
 }
 
 TEST(CFileTest, FileExists) {
-    Core::CFile file;
-    EXPECT_EQ(file.Exists("test.txt"), Core::eNoError);
+    Core::CFile File;
+    EXPECT_EQ(File.Exists("test.txt"), Core::eNoError);
 }
 
+TEST(CFileTest, RemoveExistingFile) {
+    Core::CFile File;
+    EXPECT_EQ(File.Remove("test.txt"), Core::eNoError);
+}
+
+TEST(CFileTest, RemoveMissingFile) {
+    Core::CFile File;
+    EXPECT_EQ(File.Remove("test.txt"), Core::eCannotOpenFile);
+}
 TEST(CFileTest, CloseFile) {
-    Core::CFile file;
-    file.Open("test.txt", Core::CFile::eRead);
-    file.Close();
-    EXPECT_EQ(file.Exists("nonexistent.txt"), Core::eCannotOpenFile);
+    Core::CFile File;
+    EXPECT_EQ(File.Exists("test.txt"), Core::eCannotOpenFile);
 }
 
 int main(int argc, char **argv) {
