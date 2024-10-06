@@ -32,7 +32,7 @@ TEST(CFileTest, CloseFile) {
 
 TEST(CFileTest, FileSize) {
     Core::CFile File;
-    File.Touch("test.txt");
+    Core::CFile::Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
     File.Write("Hello, World!");
     File.Close();
@@ -43,7 +43,7 @@ TEST(CFileTest, FileSize) {
 
 TEST(CFileTest, FileSeek) {
     Core::CFile File;
-    File.Touch("test.txt");
+    Core::CFile::Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
     File.Write("Hello, World!");
     File.Close();
@@ -54,7 +54,7 @@ TEST(CFileTest, FileSeek) {
 
 TEST(CFileTest, FileTell) {
     Core::CFile File;
-    File.Touch("test.txt");
+    Core::CFile::Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
     File.Write("Hello, World!");
     File.Close();
