@@ -21,7 +21,7 @@
 #define MAJOR 0
 #define MINOR 0
 #define RELEASE 1
-#define BUILD 9
+#define BUILD 13
 #define t(u) #u
 #define VERSION(M,m,R,B) t(M) "." t(m) "." t(R) "." t(B)
 #define VERSION_STRING VERSION(MAJOR,MINOR,RELEASE,BUILD)
@@ -33,7 +33,7 @@
 
 #include "Errors.h"
 #include <ctime>
-#include <fstream>xs
+#include <fstream>
 #include <iomanip>
 #include <mutex>
 #include <string>

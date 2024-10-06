@@ -30,8 +30,17 @@ int main()
             );
 
     cairo_t* cr = cairo_create(surface);
-    cairo_set_source_rgb(cr, 0, 0, 0);
+
+
+    cairo_set_source_rgb(cr, 0xFF, 0xFF, 0xFF);
     cairo_paint(cr);
+
+    //draw a line from 0,0 to 100,200
+    cairo_set_source_rgb(cr, 0xFF, 0, 0);
+    cairo_move_to(cr, 0, 0);
+    cairo_line_to(cr, 100, 200);
+    cairo_stroke(cr);
+
     cairo_surface_write_to_png(surface, "cairo.png");
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
