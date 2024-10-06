@@ -12,38 +12,46 @@ namespace Core
     class CFile
     {
         public:
-        enum EMode
-        {
-            eRead,
-            eWrite,
-            eAppend,
-            eReplace,
-            eOwerwrite,
-            eReadAppend
-        };
+            enum EMode
+            {
+                eRead,
+                eWrite,
+                eAppend,
+                eReplace,
+                eOwerwrite,
+                eReadAppend
+            };
 
         public:
-        CFile();
+            CFile();
 
-        /*!
-         *@brief Releases any ressources held by the file.
-         */
-        ~CFile(void);
+            /*!
+             *@brief Releases any ressources held by the file.
+             */
+            ~CFile(void);
 
-        Core::EErrors Open(const std::string& name, EMode mode, bool binary = false);
+            Core::EErrors Open(const std::string &name, EMode mode, bool binary = false);
 
-        /*!
-         *@brief Close the file.
-         */
-        void Close();
+            /*!
+             *@brief Close the file.
+             */
+            void Close();
 
-        static Core::EErrors Exists(const std::string& name);
-        static Core::EErrors Touch(const std::string& name);
-        static Core::EErrors Remove(const std::string& name);
+            static Core::EErrors Exists(const std::string &name);
 
-        private:
-        FILE* fHandle;
-        std::string fName;
+            static Core::EErrors Touch(const std::string &name);
+
+            static Core::EErrors Remove(const std::string &name);
+
+            const int Size() const;
+
+            const int Seek(int, int) const;
+
+            const int Tell() const;
+
+        public:
+            FILE *fHandle;
+            std::string fName;
     };
 }
 

@@ -66,4 +66,26 @@ namespace Core
         }
         return Core::eCannotOpenFile;
     }
+
+    const int CFile::Size() const
+    {
+        if (fHandle == nullptr)
+            return -1;
+        fseek(fHandle, 0, SEEK_END);
+        return ftell(fHandle);
+    }
+
+    const int CFile::Seek(int offset, int origin) const
+    {
+        if (fHandle == nullptr)
+            return -1;
+        return fseek(fHandle, offset, origin);
+    }
+
+    const int CFile::Tell() const
+    {
+        if (fHandle == nullptr)
+            return -1;
+        return ftell(fHandle);
+    }
 }

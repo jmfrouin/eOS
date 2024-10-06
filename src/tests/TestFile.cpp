@@ -30,6 +30,41 @@ TEST(CFileTest, CloseFile) {
     EXPECT_EQ(File.Exists("test.txt"), Core::eCannotOpenFile);
 }
 
+TEST(CFileTest, FileSize) {
+    Core::CFile File;
+    File.Touch("test.txt");
+    File.Open("test.txt", Core::CFile::eWrite);
+    fprintf(File.fHandle, "Hello, World!");
+    File.Close();
+    File.Open("test.txt", Core::CFile::eRead);
+    EXPECT_EQ(File.Size(), 0);
+    File.Close();
+}
+
+TEST(CFileTest, FileSeek) {
+    Core::CFile File;
+    File.Touch("test.txt");
+    File.Open("test.txt", Core::CFile::eWrite);
+    fprintf(File.fHandle, "Hello, World!");
+    File.Close();
+    File.Open("test.txt", Core::CFile::eRead);
+    EXPECT_EQ(File.Seek(5, SEEK_SET), 0);
+    File.Close();
+}
+
+TEST(CFileTest, FileTell) {
+    Core::CFile File;
+    File.Touch("test.txt");
+    File.Open("test.txt", Core::CFile::eWrite);
+    fprintf(File.fHandle, "Hello, World!");
+    File.Close();
+    File.Open("test.txt", Core::CFile::eRead);
+    EXPECT_EQ(File.Tell(), 0);
+    File.Seek(5, SEEK_SET);
+    EXPECT_EQ(File.Tell(), 5);
+    File.Close();
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
