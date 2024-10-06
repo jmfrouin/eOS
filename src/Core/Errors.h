@@ -17,7 +17,14 @@ namespace Core
         eConfEmpty = 3,
         eCannotOpenPath = 4,
         eAccessDenied = 5,
-        eUnknown = 6
+        eUnknown = 6,
+        eFileNotFound = 7,
+        eFileAlreadyExists = 8,
+        eInvalidParameter = 9,
+        eInvalidPath = 10,
+        eInvalidFile = 11,
+        eInvalidMode = 12,
+
     };
 }
 
