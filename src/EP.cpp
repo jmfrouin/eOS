@@ -12,8 +12,9 @@ int main()
     std::cout << GREEN << "[DBG] DEBUG mode\n" << STOP;
 //#endif
 
-    Core::CFile file;
-    file.Open("test.txt", Core::CFile::eRead);
+    Core::CFile File;
+    File.Open("EP.txt", Core::CFile::eWrite);
+    File.Write("Hello, World!");
 
     const auto end{std::chrono::steady_clock::now()};
     const std::chrono::duration<double> elapsed_seconds{end - start};

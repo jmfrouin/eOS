@@ -20,14 +20,24 @@ namespace Core
     {
         if (fHandle) Close();
         fName = name;
+        fMode = mode;
 
-        std::cout << "CFile::Open(" << fName << ", " << mode << ");" << std::endl;
-        fHandle = fopen(fName.c_str(), "r");
+        std::cout << "CFile::Open(" << fName << ", " << fMode << ");" << std::endl;
+        fHandle = fopen(fName.c_str(), fMode == eRead ? "r" : "w");
         if (fHandle == nullptr)
         {
             return Core::eCannotOpenFile;
         }
         return Core::eNoError;
+    }
+
+    const size_t CFile::Write(const std::string& str) const
+    {
+        if(fMode == eRead)
+            return 0;
+        if (fHandle == nullptr)
+            return 0;
+        return fwrite(str.c_str(), 1, str.size(), fHandle);
     }
 
     void CFile::Close()

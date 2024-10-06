@@ -24,17 +24,12 @@ namespace Core
 
         public:
             CFile();
-
-            /*!
-             *@brief Releases any ressources held by the file.
-             */
             ~CFile(void);
 
             Core::EErrors Open(const std::string &name, EMode mode, bool binary = false);
 
-            /*!
-             *@brief Close the file.
-             */
+            const size_t Write(const std::string& str) const;
+
             void Close();
 
             static Core::EErrors Exists(const std::string &name);
@@ -49,8 +44,9 @@ namespace Core
 
             const int Tell() const;
 
-        public:
+        private:
             FILE *fHandle;
+            EMode fMode;
             std::string fName;
     };
 }

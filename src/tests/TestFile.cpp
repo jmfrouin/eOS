@@ -34,10 +34,10 @@ TEST(CFileTest, FileSize) {
     Core::CFile File;
     File.Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
-    fprintf(File.fHandle, "Hello, World!");
+    File.Write("Hello, World!");
     File.Close();
     File.Open("test.txt", Core::CFile::eRead);
-    EXPECT_EQ(File.Size(), 0);
+    EXPECT_EQ(File.Size(), 13);
     File.Close();
 }
 
@@ -45,7 +45,7 @@ TEST(CFileTest, FileSeek) {
     Core::CFile File;
     File.Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
-    fprintf(File.fHandle, "Hello, World!");
+    File.Write("Hello, World!");
     File.Close();
     File.Open("test.txt", Core::CFile::eRead);
     EXPECT_EQ(File.Seek(5, SEEK_SET), 0);
@@ -56,7 +56,7 @@ TEST(CFileTest, FileTell) {
     Core::CFile File;
     File.Touch("test.txt");
     File.Open("test.txt", Core::CFile::eWrite);
-    fprintf(File.fHandle, "Hello, World!");
+    File.Write("Hello, World!");
     File.Close();
     File.Open("test.txt", Core::CFile::eRead);
     EXPECT_EQ(File.Tell(), 0);
