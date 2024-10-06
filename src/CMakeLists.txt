@@ -19,5 +19,5 @@ add_executable(eOS EP.cpp)
 TARGET_LINK_LIBRARIES(eOS Core)
 
 # Unit tests
-add_executable(runTests tests/TestFile.cpp)
+add_executable(runTests tests/TestFile.cpp tests/TestDir.cpp)
 target_link_libraries(runTests gtest gtest_main Core)
