@@ -17,9 +17,17 @@ include_directories(.)
 
 add_executable(eOS EP.cpp)
 
-target_link_libraries(eOS Core /opt/homebrew/lib/libcairo.dylib)
+# Link with libcairo under mac only
+if(APPLE)
+    target_link_libraries(eOS /opt/homebrew/lib/libcairo.dylib)
+endif(APPLE)
+target_link_libraries(eOS Core)
 
 # Unit tests
 file(GLOB_RECURSE Test_src Tests/*.cpp)
 add_executable(runTests ${Test_src})
-target_link_libraries(runTests gtest gtest_main Core /opt/homebrew/lib/libcairo.dylib)
+if(APPLE)
+
+    target_link_libraries(runTests /opt/homebrew/lib/libcairo.dylib)
+endif(APPLE)
+target_link_libraries(runTests gtest gtest_main Core)

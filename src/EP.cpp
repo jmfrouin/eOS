@@ -1,9 +1,10 @@
 #include <Core/Def.h>
 #include <Core/File.h>
 #include <iostream>
+#ifdef MACOS
 #include <cairo/cairo-quartz.h>
 #include <cairo/cairo.h>
-
+#endif
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
     const std::chrono::duration<double> elapsed_seconds{end - start};
     std::cout << GREEN << "Elapsed time: " << elapsed_seconds.count() << "s\n" << STOP;
 
-
+#ifdef MACOS
     cairo_surface_t* surface = cairo_quartz_surface_create (
               CAIRO_FORMAT_RGB24
             , 640
@@ -44,6 +45,6 @@ int main()
     cairo_surface_write_to_png(surface, "cairo.png");
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
-
+#endif
     return EXIT_SUCCESS;
 }
