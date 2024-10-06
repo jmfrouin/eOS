@@ -77,8 +77,3 @@ TEST(CFileTest, FileRead) {
     EXPECT_STREQ(buffer, "Hello, World!");
     File.Close();
 }
-
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
