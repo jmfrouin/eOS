@@ -55,7 +55,16 @@ namespace Core
              * \param str The string to write.
              * \return The number of bytes written.
              */
-            const size_t Write(const std::string& str) const;
+            size_t Write(const std::string &str) const;
+
+            /**
+             * \brief Reads from the file.
+             * \param ptr The buffer to read into.
+             * \param size The size of each element to read.
+             * \param count The number of elements to read.
+             * \return The number of elements read.
+             */
+            const size_t Read(void *ptr, const size_t size, const size_t count = 1) const;
 
             /**
              * \brief Closes the file.

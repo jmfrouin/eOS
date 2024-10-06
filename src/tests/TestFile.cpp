@@ -65,6 +65,19 @@ TEST(CFileTest, FileTell) {
     File.Close();
 }
 
+TEST(CFileTest, FileRead) {
+    Core::CFile File;
+    Core::CFile::Touch("test.txt");
+    File.Open("test.txt", Core::CFile::eWrite);
+    File.Write("Hello, World!");
+    File.Close();
+    File.Open("test.txt", Core::CFile::eRead);
+    char buffer[14] = {0};
+    EXPECT_EQ(File.Read(buffer, 1, 13), 13);
+    EXPECT_STREQ(buffer, "Hello, World!");
+    File.Close();
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -31,13 +31,20 @@ namespace Core
         return Core::eNoError;
     }
 
-    const size_t CFile::Write(const std::string& str) const
+    size_t CFile::Write(const std::string &str) const
     {
         if(fMode == eRead)
             return 0;
         if (fHandle == nullptr)
             return 0;
         return fwrite(str.c_str(), 1, str.size(), fHandle);
+    }
+
+    const size_t CFile::Read(void *ptr, const size_t size, const size_t count) const
+    {
+        if (fHandle == nullptr)
+            return 0;
+        return fread(ptr, size, count, fHandle);
     }
 
     void CFile::Close()
