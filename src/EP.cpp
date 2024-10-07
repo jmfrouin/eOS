@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "Interface/Base/Surface.h"
+
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MOVE_STEP = 10;
@@ -46,20 +48,14 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    Interface::CSurface Surface;
     SDL_Window* window = SDL_CreateWindow("eOS poc version", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return EXIT_FAILURE;
     }
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
-        std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
+    Surface.SetWindow(window);
 
     Triangle triangle = {{{400, 300}, {450, 350}, {350, 350}}};
 
@@ -87,16 +83,16 @@ int main() {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
+        Surface.SetColor(0xff, 0xff, 0xff, 0xcc);
+        Surface.Clear();
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        drawTriangle(renderer, triangle);
+        Surface.SetColor(0, 0, 0, 255);
+        drawTriangle(Surface.GetRendered(), triangle);
 
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(Surface.GetRendered());
     }
 
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(Surface.GetRendered());
     SDL_DestroyWindow(window);
     SDL_Quit();
 

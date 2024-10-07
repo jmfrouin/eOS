@@ -3,23 +3,23 @@ project(eOS)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(MACOS)
-
-SET(folder Core Interface)
-FOREACH(fold ${folder})
-    ADD_SUBDIRECTORY(${fold})
-ENDFOREACH(fold ${folder})
+# Find SDL2
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # Add Google Test
 add_subdirectory(exts/googletest)
 include_directories(exts/googletest/googletest/include)
 include_directories(/opt/homebrew/include)
 
-# Find SDL2
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-
 include_directories(.)
+
+add_compile_definitions(MACOS)
+
+SET(folder Core Interface)
+FOREACH(fold ${folder})
+    ADD_SUBDIRECTORY(${fold})
+ENDFOREACH(fold ${folder})
 
 add_executable(eOS EP.cpp)
 
