@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_compile_definitions(MACOS)
 
-SET(folder Core)
+SET(folder Core Interface)
 FOREACH(fold ${folder})
     ADD_SUBDIRECTORY(${fold})
 ENDFOREACH(fold ${folder})
@@ -23,13 +23,9 @@ include_directories(.)
 
 add_executable(eOS EP.cpp)
 
-target_link_libraries(eOS ${SDL2_LIBRARIES} Core)
+target_link_libraries(eOS ${SDL2_LIBRARIES} Core Interface)
 
 # Unit tests
 file(GLOB_RECURSE Test_src Tests/*.cpp)
 add_executable(runTests ${Test_src})
-if(APPLE)
-
-    target_link_libraries(runTests /opt/homebrew/lib/libcairo.dylib)
-endif(APPLE)
-target_link_libraries(runTests gtest gtest_main Core)
+target_link_libraries(runTests gtest gtest_main Core Interface)
