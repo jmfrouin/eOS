@@ -5,9 +5,11 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
+#include <stack>
 #include <SDL2/SDL.h>
-
 #include <Core/Errors.h>
+#include <Interface/Base/Rect.h>
+#include <Core/Color.h>
 
 namespace Interface {
 
@@ -24,7 +26,18 @@ namespace Interface {
       void SetWindow(SDL_Window* window);
       SDL_Renderer* GetRendered() { return mRenderer; }
 
+    protected:
+      virtual void Initialize(int width, int height, int alignment = 2);
+      void InitializeScanLines();
+
     private:
+      std::stack<CRect> fRegions;
+      TCOLOR* fPixelBuffer;
+      TCOLOR** fScanLines;
+      int fWidth;
+      int fHeight;
+      int fPitch;
+      int fAlignment;
       SDL_Window* mWindow;
       SDL_Renderer* mRenderer;
   };

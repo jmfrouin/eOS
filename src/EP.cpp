@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cmath>
+#include <Core/Def.h>
 
 #include "Interface/Base/Surface.h"
 
@@ -51,17 +52,24 @@ int main() {
 #endif
 
     Interface::CSurface Surface;
-    SDL_Window* window = SDL_CreateWindow("eOS poc version", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+
+#ifdef WITH_SDL2
+    SDL_Window* window = SDL_CreateWindow(FULLNAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return EXIT_FAILURE;
     }
     Surface.SetWindow(window);
+#endif
+
+    Surface.Init();
 
     Triangle triangle = {{{400, 300}, {450, 350}, {350, 350}}};
 
     bool running = true;
+
+#ifdef WITH_SDL2
     SDL_Event event;
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -70,33 +78,46 @@ int main() {
             } else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
+                    {
                         moveTriangle(triangle, 0, -MOVE_STEP);
                         break;
+                    }
                     case SDLK_DOWN:
+                    {
                         moveTriangle(triangle, 0, MOVE_STEP);
                         break;
+                    }
                     case SDLK_LEFT:
+                    {
                         rotateTriangle(triangle, -90);
                         break;
+                    }
                     case SDLK_RIGHT:
+                    {
                         rotateTriangle(triangle, 90);
                         break;
+                    }
                 }
             }
         }
+#endif
 
-        Surface.SetColor(0xff, 0xff, 0xff, 0xcc);
+        Surface.SetColor(0xff, 0xff, 0xff, 0xff);
         Surface.Clear();
 
-        Surface.SetColor(0, 0, 0, 255);
+        Surface.SetColor(0, 0, 0, 0xff);
         drawTriangle(Surface.GetRendered(), triangle);
 
+#ifdef WITH_SDL2
         SDL_RenderPresent(Surface.GetRendered());
+#endif
     }
 
+#ifdef WITH_SDL2
     SDL_DestroyRenderer(Surface.GetRendered());
     SDL_DestroyWindow(window);
     SDL_Quit();
+#endif
 
     return EXIT_SUCCESS;
 }
