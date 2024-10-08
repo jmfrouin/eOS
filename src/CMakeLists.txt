@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.28)
 project(eOS)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -13,8 +13,8 @@ include_directories(exts/googletest/googletest/include)
 include_directories(/opt/homebrew/include)
 
 include_directories(.)
-
 add_compile_definitions(MACOS)
+add_compile_definitions(WITH_SDL2)
 
 SET(folder Core Interface)
 FOREACH(fold ${folder})

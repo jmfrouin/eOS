@@ -43,10 +43,12 @@ void moveTriangle(Triangle& triangle, int dx, int dy) {
 }
 
 int main() {
+#ifdef WITH_SDL2
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return EXIT_FAILURE;
     }
+#endif
 
     Interface::CSurface Surface;
     SDL_Window* window = SDL_CreateWindow("eOS poc version", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);

@@ -28,7 +28,6 @@ namespace Interface {
         mWindow = window;
     }
 
-
     Core::EErrors CSurface::Init()
     {
         mRenderer = SDL_CreateRenderer(mWindow, -1,
