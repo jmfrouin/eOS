@@ -32,12 +32,12 @@ namespace Interface {
 
     private:
       std::stack<CRect> fRegions;
-      TCOLOR* fPixelBuffer;
-      TCOLOR** fScanLines;
-      int fWidth;
-      int fHeight;
-      int fPitch;
-      int fAlignment;
+      TCOLOR* fPixelBuffer{};
+      TCOLOR** fScanLines{};
+      int fWidth{};
+      int fHeight{};
+      int fPitch{};
+      int fAlignment{};
       SDL_Window* mWindow;
       SDL_Renderer* mRenderer;
   };

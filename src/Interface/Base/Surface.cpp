@@ -19,9 +19,7 @@ namespace Interface {
     }
 
     CSurface::~CSurface()
-    {
-
-    }
+    = default;
 
     void CSurface::Initialize(int width, int height, int alignment)
     {
@@ -41,33 +39,6 @@ namespace Interface {
             fScanLines[i] = fPixelBuffer + i * fWidth;
         }
     }
-
-    
-void XSurface::InitializeScanLines()
-{
-  if (!fScanLines)
-    fScanLines = (TCOLOR**)XMemory::Malloc(fHeight * sizeof(TCOLOR*));
-  for(int sl=fPitch<0?(fHeight-1)*-fPitch:0, i=fHeight, j=0; --i>=0; sl+=fPitch, j++)
-    fScanLines[j]=&fPixelBuffer[sl];
-}
-
-void XSurface::Initialize(int width, int height, int alignment)
-{
-  // do not free/alloc the same surface
-  if ((fPixelBuffer != NULL) &&
-      (width == fWidth) &&
-      (height == fHeight) &&
-      (alignment == fAlignment)) return;
-
-  Close();
-  fWidth = width > 0 ? width : 1;
-  fHeight = height > 0 ? height : 1;
-  // Alignment MUST be a multiple of 2
-  fAlignment = alignment;
-  fPitch = (width + (alignment-1)) & -alignment;
-  fPixelBuffer = (TCOLOR*)XMemory::Malloc(fHeight * (fPitch<0?-fPitch:fPitch) * sizeof(TCOLOR));
-  PushRegion(XRect(0, 0, fWidth, fHeight));
-}
 
     void CSurface::SetWindow(SDL_Window* window)
     {

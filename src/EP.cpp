@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include <iostream>
 #include <cmath>
 #include <Core/Def.h>
@@ -11,7 +10,9 @@ const int MOVE_STEP = 10;
 const double PI = 3.14159265358979323846;
 
 struct Triangle {
+#ifdef WITH_SDL2
     SDL_Point points[3];
+#endif
 };
 
 SDL_Point calculateCenter(const Triangle& triangle) {
