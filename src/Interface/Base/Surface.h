@@ -1,6 +1,7 @@
 //
 // Created by Jean-Michel Frouin on 07/10/2024.
 //
+// Doc : https://jsandler18.github.io/extra/framebuffer.html
 
 #ifndef SURFACE_H
 #define SURFACE_H
@@ -9,14 +10,14 @@
 #include <SDL2/SDL.h>
 #include <Core/Errors.h>
 #include <Interface/Base/Rect.h>
-#include <Core/Color.h>
+#include "Color.h"
 
 namespace Interface {
 
   class CSurface {
     public:
       CSurface();
-      CSurface(SDL_Window* window);
+      explicit CSurface(SDL_Window* window);
       ~CSurface();
 
       Core::EErrors Init();
@@ -27,17 +28,20 @@ namespace Interface {
       SDL_Renderer* GetRendered() { return mRenderer; }
 
     protected:
-      virtual void Initialize(int width, int height, int alignment = 2);
+      void Initialize(int width, int height, int alignment = 2);
       void InitializeScanLines();
+      void Line(int x1, int y1, int x2, int y2, TCOLOR color) const;
+
+      bool PushRegion(const CRect&);
 
     private:
-      std::stack<CRect> fRegions;
-      TCOLOR* fPixelBuffer{};
-      TCOLOR** fScanLines{};
-      int fWidth{};
-      int fHeight{};
-      int fPitch{};
-      int fAlignment{};
+      std::stack<CRect> mRegions;
+      TCOLOR* mPixelBuffer{};
+      TCOLOR** mScanLines{};
+      int mWidth{};
+      int mHeight{};
+      int mPitch{};
+      int mAlignment{};
       SDL_Window* mWindow;
       SDL_Renderer* mRenderer;
   };

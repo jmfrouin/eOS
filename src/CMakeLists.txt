@@ -27,5 +27,6 @@ target_link_libraries(eOS ${SDL2_LIBRARIES} Core Interface)
 
 # Unit tests
 file(GLOB_RECURSE Test_src Tests/*.cpp)
-add_executable(runTests ${Test_src})
+add_executable(runTests ${Test_src}
+        Tests/TestMemory.cpp)
 target_link_libraries(runTests gtest gtest_main Core Interface)
