@@ -88,8 +88,8 @@ namespace Interface
     fTop = y;
     fWidth = w;
     fHeight = h;
-    fRight = x+w-1;
-    fBottom = y+h-1;
+    fRight = x+w;
+    fBottom = y+h;
   }
 
   void CRect::Move(int dx, int dy) {
@@ -169,11 +169,11 @@ namespace Interface
   void CRect::Center(const CRect ref, bool hz, bool vt) {
     if (hz) {
       int xref = (ref.fLeft + ref.fRight) >> 1;
-      fRight = (fLeft = xref - (fWidth >> 1)) + fWidth - 1;
+      fRight = (fLeft = xref - (fWidth >> 1)) + fWidth;
     }
     if (vt) {
       int yref = (ref.fTop + ref.fBottom) >> 1;
-      fBottom = (fTop = yref - (fHeight >> 1)) + fHeight - 1;
+      fBottom = (fTop = yref - (fHeight >> 1)) + fHeight;
     }
   }
 
