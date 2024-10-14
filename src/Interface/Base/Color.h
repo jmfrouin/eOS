@@ -23,7 +23,6 @@
                            ((_PRGB_(c) >> ( 8-GSHIFT+(8-GBITS))) & GSMASK) |\
                            ((_PRGB_(c) >> ( 0-BSHIFT+(8-BBITS))) & BSMASK) )
 
-// Pixel size
 typedef unsigned short TCOLOR;
 
 // Pixel functions

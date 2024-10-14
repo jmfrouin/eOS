@@ -29,26 +29,15 @@ namespace Interface {
         mPixelBuffer = new TCOLOR[mWidth * mHeight];
     }
 
-    void CSurface::Line(int x1, int y1, int x2, int y2, TCOLOR color) const {
-        int dx = abs(x2 - x1);
-        int dy = abs(y2 - y1);
-        int sx = x1 < x2 ? 1 : -1;
-        int sy = y1 < y2 ? 1 : -1;
-        int err = dx - dy;
-        int e2;
+    void CSurface::DrawHLine(int x1, int x2, int y, TCOLOR color) const {
+        for (int x = x1; x <= x2; ++x) {
+            mPixelBuffer[y * mWidth + x] = color;
+        }
+    }
 
-        for (;;) {
-            mPixelBuffer[y1 * mWidth + x1] = color;
-            if (x1 == x2 && y1 == y2) break;
-            e2 = 2 * err;
-            if (e2 > -dy) {
-                err -= dy;
-                x1 += sx;
-            }
-            if (e2 < dx) {
-                err += dx;
-                y1 += sy;
-            }
+    void CSurface::DrawVLine(int x, int y1, int y2, TCOLOR color) const {
+        for (int y = y1; y <= y2; ++y) {
+            mPixelBuffer[y * mWidth + x] = color;
         }
     }
 
@@ -56,7 +45,7 @@ namespace Interface {
         mWindow = window;
     }
 
-    Core::EErrors CSurface::Init() {
+    Core::EErrors CSurface::Init(int width, int height,int alignment) {
         mRenderer = SDL_CreateRenderer(mWindow, -1,
                                        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if (!mRenderer) {
@@ -65,6 +54,7 @@ namespace Interface {
             SDL_Quit();
             return Core::eAccessDenied;
         }
+        Initialize(width, height, alignment);
         return Core::eNoError;
     }
 
