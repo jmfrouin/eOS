@@ -18,6 +18,7 @@ namespace Interface {
     public:
       CSurface();
       explicit CSurface(SDL_Window* window);
+      void Close();
       ~CSurface();
 
       Core::EErrors Init(int width, int height, int alignment = 2);
@@ -29,21 +30,23 @@ namespace Interface {
 
     protected:
       void Initialize(int width, int height, int alignment);
+      void InitializeScanLines();
 
     public:
       void DrawHLine(int x1, int x2, int y, TCOLOR color) const;
       void DrawVLine(int x, int y1, int y2, TCOLOR color) const;
 
     private:
-      std::stack<CRect> mRegions;
-      TCOLOR* mPixelBuffer{};
-      TCOLOR** mScanLines{};
-      int mWidth{};
-      int mHeight{};
-      int mPitch{};
-      int mAlignment{};
-      SDL_Window* mWindow;
-      SDL_Renderer* mRenderer;
+      std::stack<CRect> mRegions; // Stack of regions to be drawn
+      TCOLOR* mPixelBuffer; // Pointer to the start of the pixel data
+      TCOLOR** mScanLines; // Array of pointers to the start of each row of pixels
+      int mDepth{}; // Depth is the number of bytes per pixel
+      int mWidth{}; // Width is the number of columns of pixels
+      int mHeight{}; // Height is the number of rows of pixels
+      int mPitch{}; // Pitch is the number of bytes in a row of pixels
+      int mAlignment{}; // Alignment is the number of bytes in a row of pixels
+      SDL_Window* mWindow; // Pointer to the window
+      SDL_Renderer* mRenderer; // Pointer to the renderer
   };
 }
 

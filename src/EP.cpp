@@ -64,9 +64,9 @@ int main() {
     Surface.SetWindow(window);
 #endif
 
-    Surface.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
-    TCOLOR Color = 0xF0;
-    Surface.DrawHLine(10, 100, 10, Color);
+    Surface.Init(3, 3);
+    TCOLOR Color = 0xDEADCAFE;
+    Surface.DrawHLine(0, 10, 1, Color);
 
     Triangle triangle = {{{400, 300}, {450, 350}, {350, 350}}};
 

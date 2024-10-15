@@ -23,7 +23,7 @@
                            ((_PRGB_(c) >> ( 8-GSHIFT+(8-GBITS))) & GSMASK) |\
                            ((_PRGB_(c) >> ( 0-BSHIFT+(8-BBITS))) & BSMASK) )
 
-typedef unsigned short TCOLOR;
+typedef unsigned int TCOLOR;
 
 // Pixel functions
 #define PixelMemcpy  XMemory::Memcpy16

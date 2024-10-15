@@ -4,6 +4,7 @@
 
 #include "Surface.h"
 #include <iostream>
+#include <Core/Memory.h>
 
 namespace Interface {
     CSurface::CSurface(SDL_Window *window) :
@@ -21,12 +22,40 @@ namespace Interface {
     CSurface::~CSurface()
     = default;
 
+    void CSurface::Close() {
+        if (mRenderer) {
+            mRenderer = nullptr;
+        }
+        if (mPixelBuffer) {
+            Core::CMemory::Free(mPixelBuffer);
+            mPixelBuffer = nullptr;
+        }
+        if (mScanLines) {
+            Core::CMemory::Free(mScanLines);
+            mScanLines = nullptr;
+        }
+    }
+
     void CSurface::Initialize(int width, int height, int alignment) {
         mWidth = width;
         mHeight = height;
         mAlignment = alignment;
-        mPitch = mWidth * 4;
-        mPixelBuffer = new TCOLOR[mWidth * mHeight];
+        mDepth = 4;
+        mPitch = mWidth * mDepth;
+        mPixelBuffer = (TCOLOR*)Core::CMemory::Malloc(mWidth * mHeight * mDepth);
+        InitializeScanLines();
+    }
+
+    void CSurface::InitializeScanLines()
+    {
+        if (!mScanLines)
+        {
+            mScanLines = (TCOLOR**)Core::CMemory::Malloc(mHeight * sizeof(TCOLOR*));
+        }
+        for(int sl=mPitch<0?(mPitch-1)*-mPitch:0, i=mPitch, j=0; --i>=0; sl+=mPitch, j++)
+        {
+            mScanLines[j]=&mPixelBuffer[sl];
+        }
     }
 
     void CSurface::DrawHLine(int x1, int x2, int y, TCOLOR color) const {
