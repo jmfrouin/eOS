@@ -38,8 +38,8 @@ namespace Interface {
 
     private:
       std::stack<CRect> mRegions; // Stack of regions to be drawn
-      TCOLOR* mPixelBuffer; // Pointer to the start of the pixel data
-      TCOLOR** mScanLines; // Array of pointers to the start of each row of pixels
+      TCOLOR* mPixelBuffer{}; // Pointer to the start of the pixel data
+      TCOLOR** mScanLines{}; // Array of pointers to the start of each row of pixels
       int mDepth{}; // Depth is the number of bytes per pixel
       int mWidth{}; // Width is the number of columns of pixels
       int mHeight{}; // Height is the number of rows of pixels
