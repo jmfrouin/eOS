@@ -65,6 +65,9 @@ int main() {
 #endif
 
     Interface::CSurface Surface;
+#ifdef EOS_ENABLE_LOG
+    Core::CLog::Log("Creation Surface");
+#endif
 
 #ifdef WITH_SDL2
     SDL_Window* window = SDL_CreateWindow(FULLNAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
