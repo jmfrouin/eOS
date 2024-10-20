@@ -42,7 +42,8 @@ namespace Interface {
         mAlignment = alignment;
         mDepth = 4;
         mPitch = mWidth * mDepth;
-        mPixelBuffer = (TCOLOR*)Core::CMemory::Malloc(mWidth * mHeight * mDepth);
+        int BufferSize = mWidth * mHeight * mDepth;
+        mPixelBuffer = (TCOLOR*)Core::CMemory::Malloc(BufferSize);
         InitializeScanLines();
     }
 

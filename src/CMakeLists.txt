@@ -15,6 +15,7 @@ include_directories(/opt/homebrew/include)
 include_directories(.)
 add_compile_definitions(MACOS)
 add_compile_definitions(WITH_SDL2)
+ADD_DEFINITIONS(-DEOS_ENABLE_LOG)
 
 SET(folder Core Interface)
 FOREACH(fold ${folder})
@@ -28,5 +29,6 @@ target_link_libraries(eOS ${SDL2_LIBRARIES} Core Interface)
 # Unit tests
 file(GLOB_RECURSE Test_src Tests/*.cpp)
 add_executable(runTests ${Test_src}
-        Tests/TestMemory.cpp)
+        Tests/TestMemory.cpp
+        Tests/TestLog.cpp)
 target_link_libraries(runTests gtest gtest_main Core Interface)

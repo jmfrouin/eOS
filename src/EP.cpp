@@ -4,6 +4,10 @@
 
 #include "Interface/Base/Surface.h"
 
+#ifdef EOS_ENABLE_LOG
+#include <Core/Log.h>
+#endif
+
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MOVE_STEP = 10;
@@ -45,9 +49,17 @@ void moveTriangle(Triangle& triangle, int dx, int dy) {
 }
 
 int main() {
+#ifdef EOS_ENABLE_LOG
+    Core::CLog::CreateLogFile("EP.log");
+    Core::CLog::Log("Application started");
+#endif
+
 #ifdef WITH_SDL2
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+#ifdef EOS_ENABLE_LOG
+        Core::CLog::Log("SDL_Init Error", SDL_GetError());
+#endif
         return EXIT_FAILURE;
     }
 #endif
@@ -58,6 +70,9 @@ int main() {
     SDL_Window* window = SDL_CreateWindow(FULLNAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+#ifdef EOS_ENABLE_LOG
+        Core::CLog::Log("SDL_CreateWindow Error", SDL_GetError());
+#endif
         SDL_Quit();
         return EXIT_FAILURE;
     }
@@ -66,7 +81,6 @@ int main() {
 
     Surface.Init(3, 3);
     TCOLOR Color = 0xDEADCAFE;
-    Surface.DrawHLine(0, 10, 1, Color);
 
     Triangle triangle = {{{400, 300}, {450, 350}, {350, 350}}};
 
@@ -74,40 +88,46 @@ int main() {
 
 #ifdef WITH_SDL2
     SDL_Event event;
+#endif
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
+#ifdef EOS_ENABLE_LOG
+                Core::CLog::Log("SDL_QUIT event received");
+#endif
             } else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                    {
                         moveTriangle(triangle, 0, -MOVE_STEP);
+#ifdef EOS_ENABLE_LOG
+                        Core::CLog::Log("Triangle moved up");
+#endif
                         break;
-                    }
                     case SDLK_DOWN:
-                    {
                         moveTriangle(triangle, 0, MOVE_STEP);
+#ifdef EOS_ENABLE_LOG
+                        Core::CLog::Log("Triangle moved down");
+#endif
                         break;
-                    }
                     case SDLK_LEFT:
-                    {
                         rotateTriangle(triangle, -90);
+#ifdef EOS_ENABLE_LOG
+                        Core::CLog::Log("Triangle rotated left");
+#endif
                         break;
-                    }
                     case SDLK_RIGHT:
-                    {
                         rotateTriangle(triangle, 90);
+#ifdef EOS_ENABLE_LOG
+                        Core::CLog::Log("Triangle rotated right");
+#endif
                         break;
-                    }
                 }
             }
         }
-#endif
 
         Surface.SetColor(0xff, 0xff, 0xff, 0xff);
         Surface.Clear();
-
 
         Surface.SetColor(0, 0, 0, 0xff);
         drawTriangle(Surface.GetRendered(), triangle);
@@ -121,6 +141,11 @@ int main() {
     SDL_DestroyRenderer(Surface.GetRendered());
     SDL_DestroyWindow(window);
     SDL_Quit();
+#endif
+
+#ifdef EOS_ENABLE_LOG
+    Core::CLog::Log("Application ended");
+    Core::CLog::CloseLogFile();
 #endif
 
     return EXIT_SUCCESS;
