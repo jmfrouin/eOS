@@ -1,12 +1,15 @@
-//
-// Created by Jean-Michel Frouin on 20/10/2024.
-//
-
 #ifndef EOS_LOG_H
 #define EOS_LOG_H
 
 #include <string>
+#include <iostream>
+#include <sstream>
 #include <fstream>
+#include <chrono>
+#include <iomanip>
+
+#define LOG_TO_FILE
+#define LOG_FILE "eOS.log"
 
 namespace Core {
     /**
@@ -15,35 +18,58 @@ namespace Core {
      */
     class CLog {
     public:
-        /**
-         * @brief Creates a log file.
-         * @param filename The name of the log file.
-         */
-        static void CreateLogFile(const std::string& filename);
+        static std::string getCurrentTimestamp() {
+            auto now = std::chrono::system_clock::now();
+            auto in_time_t = std::chrono::system_clock::to_time_t(now);
+            std::stringstream ss;
+            ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+            return ss.str();
+        }
 
-        /**
-         * @brief Closes the log file.
-         */
-        static void CloseLogFile();
+        static void Log(const std::string &file, const int &line, const std::string &message) {
+#ifdef LOG_TO_FILE
+            std::ofstream File;
+            File.open(LOG_FILE, std::ios::out | std::ios::app);
+            File << "[" << getCurrentTimestamp() << "] "
+                 << file << ":" << line << " "
+                 << message << std::endl;
+            File.close();
+#else
+            std::cout << "[" << getCurrentTimestamp() << "] "
+                      << file << ":" << line << " "
+                      << message << std::endl;
+#endif
+        }
 
-        /**
-         * @brief Logs a message to the log file.
-         * @param message The message to log.
-         */
-        static void Log(const std::string& message);
+        static void Log(const std::string &file, const int &line, const std::string &message, int value) {
+#ifdef LOG_TO_FILE
+            std::ofstream File;
+            File.open(LOG_FILE, std::ios::out | std::ios::app);
+            File << "[" << getCurrentTimestamp() << "] "
+                 << file << ":" << line << " "
+                 << message << ": " << value << std::endl;
+            File.close();
+#else
+            std::cout << "[" << getCurrentTimestamp() << "] "
+                      << file << ":" << line << " "
+                      << message << ": " << value << std::endl;
+#endif
+        }
 
-        /**
-         * @brief Logs a message and an integer to the log file.
-         * @param message The message to log.
-         * @param value The integer value to log.
-         */
-        static void Log(const std::string& message, int value);
-        static void Log(const std::string& message, const std::string& value); // New overload
-
-
-    private:
-        static bool mEnabled; ///< Indicates if logging is enabled.
-        static std::ofstream mFileHandler; ///< The file handler for the log file.
+        static void Log(const std::string &file, const int &line, const std::string &message, const std::string &value) {
+#ifdef LOG_TO_FILE
+            std::ofstream File;
+            File.open(LOG_FILE, std::ios::out | std::ios::app);
+            File << "[" << getCurrentTimestamp() << "] "
+                 << file << ":" << line << " "
+                 << message << ": " << value << std::endl;
+            File.close();
+#else
+            std::cout << "[" << getCurrentTimestamp() << "] "
+                      << file << ":" << line << " "
+                      << message << ": " << value << std::endl;
+#endif
+        }
     };
 }
 

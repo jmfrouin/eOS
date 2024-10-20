@@ -4,12 +4,10 @@
 
 #include "Interface/Base/Surface.h"
 
-#ifdef EOS_ENABLE_LOG
 #include <Core/Log.h>
-#endif
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 500;
+const int WINDOW_HEIGHT = 500;
 const int MOVE_STEP = 10;
 const double PI = 3.14159265358979323846;
 
@@ -49,43 +47,35 @@ void moveTriangle(Triangle& triangle, int dx, int dy) {
 }
 
 int main() {
-#ifdef EOS_ENABLE_LOG
-    Core::CLog::CreateLogFile("EP.log");
-    Core::CLog::Log("Application started");
-#endif
+    Core::CLog::Log(__FILE__, __LINE__, "Application started");
 
 #ifdef WITH_SDL2
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-#ifdef EOS_ENABLE_LOG
-        Core::CLog::Log("SDL_Init Error", SDL_GetError());
-#endif
+        Core::CLog::Log(__FILE__, __LINE__, "SDL_Init Error", SDL_GetError());
         return EXIT_FAILURE;
     }
 #endif
 
     Interface::CSurface Surface;
-#ifdef EOS_ENABLE_LOG
-    Core::CLog::Log("Creation Surface");
-#endif
+    Core::CLog::Log(__FILE__, __LINE__, "Creation Surface");
 
 #ifdef WITH_SDL2
     SDL_Window* window = SDL_CreateWindow(FULLNAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-#ifdef EOS_ENABLE_LOG
-        Core::CLog::Log("SDL_CreateWindow Error", SDL_GetError());
-#endif
+        Core::CLog::Log(__FILE__, __LINE__, "SDL_CreateWindow Error", SDL_GetError());
         SDL_Quit();
         return EXIT_FAILURE;
     }
     Surface.SetWindow(window);
 #endif
 
-    Surface.Init(3, 3);
+    //Surface.Init(3, 3);
+    Surface.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
     TCOLOR Color = 0xDEADCAFE;
 
-    Triangle triangle = {{{400, 300}, {450, 350}, {350, 350}}};
+    Triangle triangle = {{{40, 30}, {45, 35}, {35, 35}}};
 
     bool running = true;
 
@@ -96,35 +86,35 @@ int main() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
-#ifdef EOS_ENABLE_LOG
-                Core::CLog::Log("SDL_QUIT event received");
-#endif
+                Core::CLog::Log(__FILE__, __LINE__, "SDL_QUIT event received");
             } else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
+                    {
                         moveTriangle(triangle, 0, -MOVE_STEP);
-#ifdef EOS_ENABLE_LOG
-                        Core::CLog::Log("Triangle moved up");
-#endif
+                        Core::CLog::Log(__FILE__, __LINE__, "Triangle moved up");
                         break;
+                    }
                     case SDLK_DOWN:
+                    {
                         moveTriangle(triangle, 0, MOVE_STEP);
-#ifdef EOS_ENABLE_LOG
-                        Core::CLog::Log("Triangle moved down");
-#endif
+                        Core::CLog::Log(__FILE__, __LINE__, "Triangle moved down");
                         break;
+                    }
                     case SDLK_LEFT:
+                    {
+                        moveTriangle(triangle, -MOVE_STEP, 0);
                         rotateTriangle(triangle, -90);
-#ifdef EOS_ENABLE_LOG
-                        Core::CLog::Log("Triangle rotated left");
-#endif
+                        Core::CLog::Log(__FILE__, __LINE__, "Triangle rotated left");
                         break;
+                    }
                     case SDLK_RIGHT:
+                    {
+                        moveTriangle(triangle, MOVE_STEP, 0);
                         rotateTriangle(triangle, 90);
-#ifdef EOS_ENABLE_LOG
-                        Core::CLog::Log("Triangle rotated right");
-#endif
+                        Core::CLog::Log(__FILE__, __LINE__, "Triangle rotated right");
                         break;
+                    }
                 }
             }
         }
@@ -146,10 +136,6 @@ int main() {
     SDL_Quit();
 #endif
 
-#ifdef EOS_ENABLE_LOG
-    Core::CLog::Log("Application ended");
-    Core::CLog::CloseLogFile();
-#endif
-
+    Core::CLog::Log(__FILE__, __LINE__, "Application ended");
     return EXIT_SUCCESS;
 }

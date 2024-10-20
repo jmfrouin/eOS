@@ -1,6 +1,3 @@
-//
-// Created by Jean-Michel Frouin on 20/10/2024.
-//
 #include <gtest/gtest.h>
 #include <Core/Log.h>
 #include <fstream>
@@ -11,51 +8,40 @@ class CLogTest : public ::testing::Test {
 protected:
     void SetUp() override {
         // Ensure the log file is not present before each test
-        std::remove("test.log");
+        std::remove("eOS.log");
     }
 
     void TearDown() override {
         // Clean up the log file after each test
-        std::remove("test.log");
+        std::remove("eOS.log");
     }
 };
 
-TEST_F(CLogTest, CreateLogFile) {
-    CLog::CreateLogFile("test.log");
-    std::ifstream file("test.log");
-    EXPECT_TRUE(file.is_open());
-    file.close();
-    CLog::CloseLogFile();
-}
-
 TEST_F(CLogTest, LogMessage) {
-    CLog::CreateLogFile("test.log");
-    CLog::Log("Test message");
-    CLog::CloseLogFile();
-
-    std::ifstream file("test.log");
+    CLog::Log(__FILE__, __LINE__, "Test message");
+    std::ifstream file("eOS.log");
     std::string line;
     std::getline(file, line);
-    EXPECT_EQ(line, "Test message");
+    EXPECT_NE(line.find("Test message"), std::string::npos);
     file.close();
 }
 
 TEST_F(CLogTest, LogMessageWithInt) {
-    CLog::CreateLogFile("test.log");
-    CLog::Log("Test message", 42);
-    CLog::CloseLogFile();
-
-    std::ifstream file("test.log");
+    CLog::Log(__FILE__, __LINE__, "Test message", 42);
+    std::ifstream file("eOS.log");
     std::string line;
     std::getline(file, line);
-    EXPECT_EQ(line, "Test message: 42");
+    EXPECT_NE(line.find("Test message"), std::string::npos);
+    EXPECT_NE(line.find("42"), std::string::npos);
     file.close();
 }
 
-TEST_F(CLogTest, CloseLogFile) {
-    CLog::CreateLogFile("test.log");
-    CLog::CloseLogFile();
-    std::ifstream file("test.log");
-    EXPECT_TRUE(file.is_open());
+TEST_F(CLogTest, LogMessageWithString) {
+    CLog::Log(__FILE__, __LINE__, "Test message", "additional info");
+    std::ifstream file("eOS.log");
+    std::string line;
+    std::getline(file, line);
+    EXPECT_NE(line.find("Test message"), std::string::npos);
+    EXPECT_NE(line.find("additional info"), std::string::npos);
     file.close();
 }

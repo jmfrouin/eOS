@@ -36,7 +36,7 @@ namespace Interface {
       void DrawHLine(int x1, int x2, int y, TCOLOR color) const;
       void DrawVLine(int x, int y1, int y2, TCOLOR color) const;
 
-    private:
+    protected:
       std::stack<CRect> mRegions; // Stack of regions to be drawn
       TCOLOR* mPixelBuffer{}; // Pointer to the start of the pixel data
       TCOLOR** mScanLines{}; // Array of pointers to the start of each row of pixels
