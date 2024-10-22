@@ -1,100 +1,137 @@
-//
-// Created by Jean-Michel Frouin on 07/10/2024.
-//
-
 #include "Surface.h"
 #include <iostream>
-#include <Core/Memory.h>
 
 namespace Interface {
-    CSurface::CSurface(SDL_Window *window) :
-            mWindow(window), mRenderer(nullptr) {
 
+    // Constructeur par défaut
+    CSurface::CSurface() : mWidth(0), mHeight(0), mPixelBuffer(nullptr), mScanlines(nullptr) {}
+
+    // Constructeur avec paramètres
+    CSurface::CSurface(int width, int height) : mWidth(width), mHeight(height), mPixelBuffer(nullptr), mScanlines(nullptr) {
+        AllocatePixelBuffer();
+        AllocateScanlines();
     }
 
-    CSurface::CSurface() :
-    mWindow(nullptr), mRenderer(nullptr) {
-        mWidth = mHeight = mPitch = mAlignment = -1;
-        mPixelBuffer = nullptr;
-        mScanLines = nullptr;
+    // Destructeur pour libérer la mémoire
+    CSurface::~CSurface() {
+        FreePixelBuffer();  // Libère la mémoire du buffer
+        FreeScanlines();    // Libère la mémoire des scanlines
     }
 
-    CSurface::~CSurface()
-    = default;
-
-    void CSurface::Close() {
-        if (mRenderer) {
-            mRenderer = nullptr;
+    // Alloue la mémoire pour le buffer de pixels
+    void CSurface::AllocatePixelBuffer() {
+        FreePixelBuffer();  // Libère d'abord l'ancienne mémoire s'il y en a une
+        mPixelBuffer = static_cast<TCOLOR*>(malloc(mWidth * mHeight * sizeof(TCOLOR)));
+        if (!mPixelBuffer) {
+            throw std::runtime_error("Échec de l'allocation mémoire pour le buffer de pixels");
         }
-        if (mPixelBuffer) {
-            Core::CMemory::Free(mPixelBuffer);
+    }
+
+    // Libère la mémoire du buffer de pixels
+    void CSurface::FreePixelBuffer() {
+        if (mPixelBuffer != nullptr) {
+            free(mPixelBuffer);
             mPixelBuffer = nullptr;
         }
-        if (mScanLines) {
-            Core::CMemory::Free(mScanLines);
-            mScanLines = nullptr;
+    }
+
+    // Alloue la mémoire pour les scanlines
+    void CSurface::AllocateScanlines() {
+        FreeScanlines();  // Libère d'abord l'ancienne mémoire s'il y en a une
+        mScanlines = static_cast<TCOLOR**>(malloc(mHeight * sizeof(TCOLOR*)));
+        if (!mScanlines) {
+            throw std::runtime_error("Échec de l'allocation mémoire pour les scanlines");
+        }
+        for (int y = 0; y < mHeight; ++y) {
+            mScanlines[y] = &mPixelBuffer[y * mWidth]; // Pointer vers la bonne position dans mPixelBuffer
         }
     }
 
-    void CSurface::Initialize(int width, int height, int alignment) {
+    // Libère la mémoire des scanlines
+    void CSurface::FreeScanlines() {
+        if (mScanlines != nullptr) {
+            free(mScanlines); // On ne libère pas chaque scanline car elles pointent vers mPixelBuffer
+            mScanlines = nullptr;
+        }
+    }
+
+    // Getter pour mWidth
+    int CSurface::GetWidth() const {
+        return mWidth;
+    }
+
+    // Setter pour mWidth
+    void CSurface::SetWidth(int width) {
         mWidth = width;
+        AllocatePixelBuffer();  // Réalloue le buffer lors d'un changement de taille
+        AllocateScanlines();    // Réalloue les scanlines
+    }
+
+    // Getter pour mHeight
+    int CSurface::GetHeight() const {
+        return mHeight;
+    }
+
+    // Setter pour mHeight
+    void CSurface::SetHeight(int height) {
         mHeight = height;
-        mAlignment = alignment;
-        mDepth = 4;
-        mPitch = mWidth * mDepth;
-        int BufferSize = mWidth * mHeight * mDepth;
-        mPixelBuffer = (TCOLOR*)Core::CMemory::Malloc(BufferSize);
-        InitializeScanLines();
+        AllocatePixelBuffer();  // Réalloue le buffer lors d'un changement de taille
+        AllocateScanlines();    // Réalloue les scanlines
     }
 
-    void CSurface::InitializeScanLines()
-    {
-        if (!mScanLines)
-        {
-            mScanLines = (TCOLOR**)Core::CMemory::Malloc(mHeight * sizeof(TCOLOR*));
-        }
-        for(int sl=mPitch<0?(mPitch-1)*-mPitch:0, i=mPitch, j=0; --i>=0; sl+=mPitch, j++)
-        {
-            mScanLines[j]=&mPixelBuffer[sl];
+    // Accéder à un pixel à une position donnée (x, y)
+    TCOLOR CSurface::GetPixel(int x, int y) const {
+        if (x >= 0 && x < mWidth && y >= 0 && y < mHeight) {
+            return mPixelBuffer[y * mWidth + x]; // Accès par buffer
+        } else {
+            throw std::out_of_range("Coordonnées hors de la surface !");
         }
     }
 
-    void CSurface::DrawHLine(int x1, int x2, int y, TCOLOR color) const {
-        for (int x = x1; x <= x2; ++x) {
-            mPixelBuffer[y * mWidth + x] = color;
+    // Modifier un pixel à une position donnée (x, y)
+    void CSurface::SetPixel(int x, int y, TCOLOR color) {
+        if (x >= 0 && x < mWidth && y >= 0 && y < mHeight) {
+            mPixelBuffer[y * mWidth + x] = color; // Modification par buffer
+        } else {
+            throw std::out_of_range("Coordonnées hors de la surface !");
         }
     }
 
-    void CSurface::DrawVLine(int x, int y1, int y2, TCOLOR color) const {
-        for (int y = y1; y <= y2; ++y) {
-            mPixelBuffer[y * mWidth + x] = color;
+    // Accéder à une scanline entière
+    TCOLOR* CSurface::GetScanline(int y) const {
+        if (y < 0 || y >= mHeight) {
+            throw std::out_of_range("Scanline hors de la surface !");
+        }
+        return mScanlines[y]; // Retourne la scanline
+    }
+
+    // Modifier une scanline entière
+    void CSurface::SetScanline(int y, const TCOLOR* scanline) {
+        if (y < 0 || y >= mHeight) {
+            throw std::out_of_range("Scanline hors de la surface !");
+        }
+        for (int x = 0; x < mWidth; ++x) {
+            mScanlines[y][x] = scanline[x]; // Modification par scanline
         }
     }
 
-    void CSurface::SetWindow(SDL_Window *window) {
-        mWindow = window;
+    // Affichage des dimensions
+    void CSurface::PrintDimensions() const {
+        std::cout << "Width: " << mWidth << ", Height: " << mHeight << std::endl;
     }
 
-    Core::EErrors CSurface::Init(int width, int height,int alignment) {
-        mRenderer = SDL_CreateRenderer(mWindow, -1,
-                                       SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-        if (!mRenderer) {
-            std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-            SDL_DestroyWindow(mWindow);
-            SDL_Quit();
-            return Core::eAccessDenied;
+    // Blit la surface dans une texture SDL
+    SDL_Texture* CSurface::CreateTexture(SDL_Renderer* renderer) {
+        SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, mWidth, mHeight);
+        if (!texture) {
+            throw std::runtime_error("Échec de la création de la texture SDL");
         }
-        Initialize(width, height, alignment);
-        return Core::eNoError;
+        return texture;
     }
 
-    Core::EErrors CSurface::SetColor(int red, int green, int blue, int alpha) {
-        SDL_SetRenderDrawColor(mRenderer, red, green, blue, alpha);
-        return Core::eNoError;
+    // Met à jour la texture avec les pixels
+    void CSurface::UpdateTexture(SDL_Texture* texture) {
+        SDL_UpdateTexture(texture, nullptr, mPixelBuffer, mWidth * sizeof(TCOLOR));
     }
 
-    Core::EErrors CSurface::Clear() {
-        SDL_RenderClear(mRenderer);
-        return Core::eNoError;
-    }
 }

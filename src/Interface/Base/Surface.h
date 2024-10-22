@@ -1,54 +1,79 @@
-//
-// Created by Jean-Michel Frouin on 07/10/2024.
-//
-// Doc : https://jsandler18.github.io/extra/framebuffer.html
-
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include <stack>
-#include <SDL2/SDL.h>
-#include <Core/Errors.h>
-#include <Interface/Base/Rect.h>
-#include "Color.h"
+#include <cstdlib>  // Pour malloc et free
+#include <cstdint>  // Pour uint32_t
+#include <stdexcept> // Pour gestion des exceptions
+#include <SDL2/SDL.h> // Inclure la bibliothèque SDL
 
 namespace Interface {
 
-  class CSurface {
-    public:
-      CSurface();
-      explicit CSurface(SDL_Window* window);
-      void Close();
-      ~CSurface();
+    // Définition du type TCOLOR pour représenter une couleur
+    using TCOLOR = uint32_t;
 
-      Core::EErrors Init(int width, int height, int alignment = 2);
-      Core::EErrors Clear();
-      Core::EErrors SetColor(int red, int green, int blue, int alpha);
-
-      void SetWindow(SDL_Window* window);
-      SDL_Renderer* GetRendered() { return mRenderer; }
-
-    protected:
-      void Initialize(int width, int height, int alignment);
-      void InitializeScanLines();
+    class CSurface {
+    private:
+        int mWidth;           // Largeur de la surface
+        int mHeight;          // Hauteur de la surface
+        TCOLOR* mPixelBuffer; // Buffer de pixels (TCOLOR)
+        TCOLOR** mScanlines;  // Tableau de scanlines (TCOLOR**)
 
     public:
-      void DrawHLine(int x1, int x2, int y, TCOLOR color) const;
-      void DrawVLine(int x, int y1, int y2, TCOLOR color) const;
+        // Constructeur par défaut
+        CSurface();
 
-    protected:
-      std::stack<CRect> mRegions; // Stack of regions to be drawn
-      TCOLOR* mPixelBuffer{}; // Pointer to the start of the pixel data
-      TCOLOR** mScanLines{}; // Array of pointers to the start of each row of pixels
-      int mDepth{}; // Depth is the number of bytes per pixel
-      int mWidth{}; // Width is the number of columns of pixels
-      int mHeight{}; // Height is the number of rows of pixels
-      int mPitch{}; // Pitch is the number of bytes in a row of pixels
-      int mAlignment{}; // Alignment is the number of bytes in a row of pixels
-      SDL_Window* mWindow; // Pointer to the window
-      SDL_Renderer* mRenderer; // Pointer to the renderer
-  };
+        // Constructeur avec paramètres
+        CSurface(int width, int height);
+
+        // Destructeur pour libérer la mémoire
+        ~CSurface();
+
+        // Alloue la mémoire pour le buffer de pixels
+        void AllocatePixelBuffer();
+
+        // Libère la mémoire du buffer de pixels
+        void FreePixelBuffer();
+
+        // Alloue la mémoire pour les scanlines
+        void AllocateScanlines();
+
+        // Libère la mémoire des scanlines
+        void FreeScanlines();
+
+        // Getter pour mWidth
+        int GetWidth() const;
+
+        // Setter pour mWidth
+        void SetWidth(int width);
+
+        // Getter pour mHeight
+        int GetHeight() const;
+
+        // Setter pour mHeight
+        void SetHeight(int height);
+
+        // Accéder à un pixel à une position donnée (x, y)
+        TCOLOR GetPixel(int x, int y) const;
+
+        // Modifier un pixel à une position donnée (x, y)
+        void SetPixel(int x, int y, TCOLOR color);
+
+        // Accéder à une scanline entière
+        TCOLOR* GetScanline(int y) const;
+
+        // Modifier une scanline entière
+        void SetScanline(int y, const TCOLOR* scanline);
+
+        // Affichage des dimensions
+        void PrintDimensions() const;
+
+        // Blit la surface dans une texture SDL
+        SDL_Texture* CreateTexture(SDL_Renderer* renderer);
+
+        // Met à jour la texture avec les pixels
+        void UpdateTexture(SDL_Texture* texture);
+    };
+
 }
 
-
-#endif //SURFACE_H
+#endif // SURFACE_H
