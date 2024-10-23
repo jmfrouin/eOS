@@ -39,6 +39,12 @@ int main(int argc, char* argv[]) {
     for(int i=0; i<1024; i++) {
         scanline[i] = 0xFF0000; // Rouge
     }
+
+    for (int i = 0; i < 768; i+=5) {
+        for(int k=0; k<1024; k+=9) {
+            surface.SetPixel(k, i, 0x0000FF); // Bleu
+        }
+    }
     surface.SetScanline(200, scanline); // Définir la scanline à la ligne 100
     // Créer une texture SDL et mettre à jour avec les pixels
     SDL_Texture* texture = surface.CreateTexture(renderer);

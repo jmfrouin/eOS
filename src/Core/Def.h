@@ -21,7 +21,7 @@
 #define MAJOR 0
 #define MINOR 0
 #define RELEASE 1
-#define BUILD 119
+#define BUILD 124
 #define t(u) #u
 #define VERSION(M,m,R,B) t(M) "." t(m) "." t(R) "." t(B)
 #define VERSION_STRING VERSION(MAJOR,MINOR,RELEASE,BUILD)
