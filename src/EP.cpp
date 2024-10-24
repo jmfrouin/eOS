@@ -1,6 +1,11 @@
 #include <SDL2/SDL.h>
 #include <Interface/Base/Surface.h>
+#include <Core/Def.h>
 #include <iostream>
+
+#define WIDTH 1024
+#define HEIGHT 768
+
 
 int main(int argc, char* argv[]) {
     // Initialisation de SDL
@@ -10,7 +15,8 @@ int main(int argc, char* argv[]) {
     }
 
     // Créer une fenêtre
-    SDL_Window* window = SDL_CreateWindow("CSurface Display", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow(FULLNAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                          WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "Échec de la création de la fenêtre: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -27,21 +33,21 @@ int main(int argc, char* argv[]) {
     }
 
     // Création d'une surface
-    Interface::CSurface surface(1024, 768);
+    Interface::CSurface surface(WIDTH, HEIGHT);
     surface.PrintDimensions(); // Affichage des dimensions
 
     // Définir la couleur d'une scanline
     Interface::TCOLOR green = 0x00FF00; // Couleur verte
-    Interface::TCOLOR scanline[1024]; // Création d'une scanline
-    std::fill_n(scanline, 1024, green); // Remplir la scanline de vert
+    Interface::TCOLOR scanline[WIDTH]; // Création d'une scanline
+    std::fill_n(scanline, WIDTH, green); // Remplir la scanline de vert
     surface.SetScanline(100, scanline); // Définir la scanline à la ligne 100
 
-    for(int i=0; i<1024; i++) {
+    for(int i=0; i<WIDTH; i++) {
         scanline[i] = 0xFF0000; // Rouge
     }
 
-    for (int i = 0; i < 768; i+=5) {
-        for(int k=0; k<1024; k+=9) {
+    for (int i = 0; i < HEIGHT; i+=5) {
+        for(int k=0; k<WIDTH; k+=9) {
             surface.SetPixel(k, i, 0x0000FF); // Bleu
         }
     }
